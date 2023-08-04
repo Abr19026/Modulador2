@@ -1,0 +1,3 @@
+[
+{ "directory": "C:\\Users\\Funxb\\Desktop\\Proyectos\\Arduino\\Modulador2\\herramientas", "file": "pruebas.c", "output": "pruebas.o", "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\bin\\clang.exe", "-xc", "pruebas.c", "-o", "pruebas.o", "-c", "--target=i686-pc-windows-msvc19.36.32537"]}
+]

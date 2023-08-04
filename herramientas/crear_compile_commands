@@ -1,0 +1,5 @@
+# tiene que ser en bash
+
+clang -MJ salida.o.json -c pruebas.c
+sed -e '1s/^/[\n/' -e '$s/,$/\n]/' *.o.json > compile_commands.json
+rm salida.o.json
