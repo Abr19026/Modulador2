@@ -21,7 +21,7 @@
 #define T2_PRE_256  6U
 #define T2_PRE_1024 7U
 
-uint8_t t1_prescaler_to_bits(uint16_t prescaler) {
+inline uint8_t t1_prescaler_to_bits(uint16_t prescaler) {
     switch(prescaler) {
         case 1:     return T1_PRE_1;
         case 8:     return T1_PRE_8;
@@ -32,7 +32,7 @@ uint8_t t1_prescaler_to_bits(uint16_t prescaler) {
     }
 }
 
-uint8_t t2_prescaler_to_bits(uint16_t prescaler) {
+inline uint8_t t2_prescaler_to_bits(uint16_t prescaler) {
     switch(prescaler) {
         case 1:     return T2_PRE_1;
         case 8:     return T2_PRE_8;

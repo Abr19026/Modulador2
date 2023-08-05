@@ -7,10 +7,13 @@ Modulador de frecuencia y volumen para MegaAVR 328 con reloj de 16Mhz
 
 const int pin_modula_frec = A0;
 
+// inicializa modulador
+modulador_onda onda_seno;
+
 void setup() {
 	Serial.begin(9600);
-	inicializar_modulacion();
-	volumen_obj = VOLUMEN_MAX/2;
+	onda_seno.inicializar_modulacion();
+	onda_seno.volumen_obj = VOLUMEN_MAX/2;
 }
 
 void loop() {
@@ -22,13 +25,13 @@ void loop() {
 		delay(5);
 	}
 	medicion /= 10;
-	medicion = map(medicion, 0, 1023, frec_min, frec_max);
-	cambiar_frecuencia(medicion);
-	Serial.println(get_frecuencia());
-	Serial.println(volumen_obj);
+	medicion = map(medicion, 0, 1023, FREC_MIN_ONDA, FREC_MAX_ONDA);
+	onda_seno.cambiar_frecuencia(medicion);
+	Serial.println(onda_seno.get_frecuencia());
+	Serial.println(onda_seno.volumen_obj);
 }
 
 
 ISR(TIMER1_COMPA_vect) {
-	cambio_onda();
+	onda_seno.cambio_onda();
 }

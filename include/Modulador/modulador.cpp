@@ -4,44 +4,39 @@ Modulador de frecuencia y volumen para MegaAVR 328 con reloj de 16Mhz
 
 #include "modulador.h"
 #include <stdint.h>
-#include <timers328.h>
-#include <TablaSeno.h>
 
 #define PRESCALER_1 1       // Prescaler a usar en timer1
 #define PRESCALER_2 1       // Prescaler a usar en timer2
-#define CICLOS_MUESTRA 255	// Cantidad de ciclos que dura cada muestra de la onda
 
-#define CONTROL_VOLUMEN	// Permite modificar volumen por software
 
-/*Configuración*/
-const int pin_onda = PIN_EMITE_ONDA;//[[--NO-- MODIFICAR]]Pin 3 (OC2B)
-
-// La frecuencia es linealmente proporcional al cambio de fase por muestra
-const unsigned int cambio_fase_por_hz = clock_frec / (CICLOS_MUESTRA * (uint32_t)TAMANO_TABLA);
-
-// La fase se escala por este valor para no perder tanta precisión
-#define ESCALA_FASE 16
 // Está escalado por el factor ESCALA_FASE para tener más precisión en los calculos
-volatile uint16_t fase_act = 0;
-uint16_t frecuencia = 440;
-uint16_t cambio_fase = frecuencia*ESCALA_FASE/cambio_fase_por_hz;
-
-const uint16_t frec_max = min(2048, 0xFFFF/ESCALA_FASE);
-const uint16_t frec_min = max(64, cambio_fase_por_hz);
-
-// tiene que estar entre frec_max y frec_min
-void cambiar_frecuencia(uint16_t nueva_frecuencia) {
-	frecuencia = nueva_frecuencia;
-	cambio_fase = frecuencia * ESCALA_FASE / cambio_fase_por_hz;
+modulador_onda::modulador_onda() {
+	fase_act = 0;
+	frecuencia = 440;
+	cambio_fase = frecuencia*ESCALA_FASE/CAMBIO_FASE_POR_HZ;
+	/* Prueba control volumen*/
+	#ifdef CONTROL_VOLUMEN
+	#define CAMBIO_VOLUMEN 1
+	volumen_act = VOLUMEN_MAX / 2; // No modificar directamente
+	volumen_obj = volumen_act;
+	cuenta = 0;	// Para medir cada cuantos ciclos actualizar el volumen
+	#endif
 }
 
-uint16_t get_frecuencia() {
+
+// tiene que estar entre frec_max y frec_min
+void modulador_onda::cambiar_frecuencia(uint16_t nueva_frecuencia) {
+	frecuencia = nueva_frecuencia;
+	cambio_fase = frecuencia * ESCALA_FASE / CAMBIO_FASE_POR_HZ;
+}
+
+uint16_t modulador_onda::get_frecuencia() {
 	return frecuencia;
 }
 
-void inicializar_modulacion() {
+void modulador_onda::inicializar_modulacion() {
 	//Configuro pin 3 (OC2B) como output
-  	uint8_t bitSalida = digitalPinToBitMask(pin_onda);
+  	uint8_t bitSalida = digitalPinToBitMask(PIN_EMITE_ONDA);
   	DDRD |= bitSalida;
 
   	//Configuro timer 2 como PWM
@@ -65,17 +60,9 @@ void inicializar_modulacion() {
   	sei();
 }
 
-/* Prueba control volumen*/
-#ifdef CONTROL_VOLUMEN
-#define CAMBIO_VOLUMEN 1
-unsigned int volumen_act = VOLUMEN_MAX / 2; // No modificar directamente
-unsigned int volumen_obj = volumen_act;
-volatile unsigned int cuenta = 0;	// Para medir cada cuantos ciclos actualizar el volumen
-#endif
-
 // cada que se llama se cambia la muestra de la onda (fase) emitida
 // por la señal PWN en el pin_onda
-void cambio_onda() {
+void modulador_onda::cambio_onda() {
 	#ifdef CONTROL_VOLUMEN
 	cuenta++;
   	if(cuenta % 64 == 0) {
