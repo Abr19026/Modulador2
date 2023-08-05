@@ -34,14 +34,18 @@ public:
 	void inicializar_modulacion(); // Modifica timer 1 y 2
 	void cambio_onda(); // Llamar dentro de ISR(TIMER1_COMPA_vect)
 	uint16_t get_frecuencia();
-
+	#ifdef CONTROL_VOLUMEN
+	unsigned int get_volumen() {
+		return volumen_act;
+	}
+	#endif
 private:
 	uint16_t frecuencia;
 	uint16_t cambio_fase;
 	volatile uint16_t fase_act;
 	#ifdef CONTROL_VOLUMEN
 		volatile unsigned int cuenta;
-		unsigned int volumen_act;
+		volatile unsigned int volumen_act;
 	#endif	
 };
 

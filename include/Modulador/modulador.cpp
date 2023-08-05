@@ -81,7 +81,7 @@ void modulador_onda::cambio_onda() {
   	uint8_t nuevo_valor = pgm_read_word_near(valores_tabla + fase_act / ESCALA_FASE * sizeof(valores_tabla[0]));
   	#ifdef CONTROL_VOLUMEN
   	OCR2B = nuevo_valor * volumen_act / VOLUMEN_MAX;
-  	#elif
+  	#else
   	OCR2B = nuevo_valor;
   	#endif
 }
