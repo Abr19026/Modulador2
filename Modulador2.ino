@@ -137,6 +137,7 @@ void silenciar_notas(char incrementos) {
 void setup() {
 	Serial.begin(9600);
 	onda_seno.inicializar_modulacion();
+	
 	#ifdef CONTROL_VOLUMEN
 	onda_seno.volumen_obj = VOLUMEN_MAX/2;
 	#endif
