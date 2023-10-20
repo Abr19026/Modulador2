@@ -6,8 +6,7 @@
 #include <limits.h>
 
 #include <windows.h>
-
-
+#include <locale.h>
 enum str_conv_res {VALIDO, VALIDO_PARCIAL, FUERA_DE_RANGO, INVALIDO};
 
 #define maxvalue(type) _Generic(type, \
@@ -62,9 +61,17 @@ long_opt strtolong(char* cadena) {
 	return retorno;
 }
 
-
-int main(int argc, char** argv)
+// soluaciones a impresión
+// -- usar ConsolePrint en vez de printf() 
+// -- usar wmain en vez de main()
+// -- usar
+int wmain(int argc, char** argv)
 {
+	setlocale(LC_ALL,"UTF-8");
+	#if defined(_WIN32)
+		SetConsoleOutputCP(CP_UTF8);
+		SetConsoleCP(CP_UTF8);
+	#endif
 	if (argc != 3) {
 		printf("Error, se esperan 2 argumentos numéricos");
 		exit(1);
@@ -75,10 +82,19 @@ int main(int argc, char** argv)
 
 	for (int i=0; i< 2; i++) {
 		long_opt res = strtolong(argv[1 + i]);
-		if (res.valido == VALIDO && res.valor <= maxvalue(numeros[0]) && res.valor >= minvalue(numeros[0])) {
+		if 
+		( res.valido == VALIDO
+		&& res.valor <= maxvalue(numeros[0])
+		&& res.valor >= minvalue(numeros[0]))
+		{
 			numeros[i] = res.valor;
-		} else {
-			printf("El argumento %s no es un número válido", argv[1 + i]);
+		} else { 
+			FILE* arch = fopen("salida.txt", "w");
+			fprintf(arch,"El argumento %s no es un número válido", argv[1 + i]);
+			fclose(arch);
+			for (char* michar = argv[1 + i];  *michar != '\0'; michar++ ) {
+				printf("\n%u", (unsigned char)*michar);
+			}
 			exit(1);
 		}
 	}

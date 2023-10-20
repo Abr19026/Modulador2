@@ -145,18 +145,18 @@ void setup() {
 
 void loop() {
 	unsigned char pos_rep_act = 0;
-  	repetic_tiempo rep_act = delay_nota[pos_rep_act];
-  	for(unsigned int i=0; i < elems_array(notas_melodia) ; ++i) {
-  	  if (rep_act.veces <= 0) {
-  	    pos_rep_act++;
-  	    rep_act = delay_nota[pos_rep_act];
-  	  }
-  	  //Toca nota actual
-  	  tocar_nota(get_frecuencia(notas_melodia[i]) * 2, rep_act.duracion);
-  	  //Deja nota en silencio
-  	  silenciar_notas(rep_act.delay);
-  	  rep_act.veces--;
-  	}
+	repetic_tiempo rep_act = delay_nota[pos_rep_act];
+	for(unsigned int i=0; i < elems_array(notas_melodia) ; ++i) {
+		if (rep_act.veces <= 0) {
+			pos_rep_act++;
+			rep_act = delay_nota[pos_rep_act];
+		}
+		//Toca nota actual
+		tocar_nota(get_frecuencia(notas_melodia[i]) * 2, rep_act.duracion);
+		//Deja nota en silencio
+		silenciar_notas(rep_act.delay);
+		rep_act.veces--;
+	}
 }
 
 ISR(TIMER1_COMPA_vect) {
