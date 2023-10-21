@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,7 +5,6 @@
 #include <limits.h>
 
 #include <windows.h>
-#include <locale.h>
 enum str_conv_res {VALIDO, VALIDO_PARCIAL, FUERA_DE_RANGO, INVALIDO};
 
 #define maxvalue(type) _Generic(type, \
@@ -64,19 +62,13 @@ long_opt strtolong(char* cadena) {
 // soluaciones a impresión
 // -- usar ConsolePrint en vez de printf() 
 // -- usar wmain en vez de main()
-// -- usar
-int wmain(int argc, char** argv)
+// -- usar las wide functions, convertirlas a utf-8 y viceversa
+int main(int argc, char** argv)
 {
-	setlocale(LC_ALL,"UTF-8");
-	#if defined(_WIN32)
-		SetConsoleOutputCP(CP_UTF8);
-		SetConsoleCP(CP_UTF8);
-	#endif
 	if (argc != 3) {
 		printf("Error, se esperan 2 argumentos numéricos");
 		exit(1);
 	}
-
 
 	uint8_t numeros[2];
 
